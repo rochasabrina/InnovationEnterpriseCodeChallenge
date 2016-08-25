@@ -14,5 +14,6 @@ class Alien
     direction = DIRECTIONS.sample
     steps = direction == :left ? -1 : 1
     @position = @position + steps
+    @position = 1 if @position < 0
   end
 end

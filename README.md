@@ -1,3 +1,6 @@
+developed by Sabrina Rocha
+rocha.sabrin@gmail.com
+
 The Challenge:
 
 This is a code challenge for Innovation Enterprise!
@@ -16,3 +19,13 @@ In each alien turn the alien moves one step (of some fixed size m) to the right 
 Write a game that lets the user play until he hits the alien.
 You can pick values for the fixed parameters in this problem.
 
+The Solution:
+
+Ripley vs Alien
+
+ - To run the solution in command line, use 'ruby bin/app_cmd.rb'
+
+ - To run the solution in a web browser, use 'ruby bin/app_web.rb'. Then, access http://localhost:8080/ in your web browser.
+    The web implementation requires:
+    json => gem install json
+    sinatra => gem install sinatra

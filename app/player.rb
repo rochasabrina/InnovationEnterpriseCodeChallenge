@@ -8,7 +8,7 @@ class Player
   attr_accessor :weapon_angle  
 
   def initialize
-    @weapon_angle = 45.0
+    @weapon_angle = 45
   end
 
   def set_angle value
@@ -17,7 +17,7 @@ class Player
   end
 
   def calculate_impact_point
-    ((2 * Math.cos(angle_radians)  * Math.sin(angle_radians)  * VELOCITY ** 2) / GRAVITY).round 2
+    ((2 * Math.cos(angle_radians) * Math.sin(angle_radians) * VELOCITY ** 2) / GRAVITY).round 2
   end
 
   private
@@ -26,7 +26,7 @@ class Player
   end
 
   def normalize_angle
-    @weapon_angle = 180 if @weapon_angle > 180
+    @weapon_angle = 90 if @weapon_angle > 90
     @weapon_angle = 0 if @weapon_angle < 0
   end
 end
