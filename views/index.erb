@@ -1,0 +1,148 @@
+<html>
+  <head>
+    <title>Ripley vs Alien</title>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js"></script>
+    <script type="text/javascript">
+      $(document).ready(function() {
+        $(document).keydown(function(e) {
+          switch(e.keyCode) {
+            case 32: //spacebar
+              e.preventDefault();
+              $.ajax({
+                url: "/shoot",
+                type: "GET",
+                dataType: "json",
+                success: function(data) {
+                  $("#explosion").css("left", data.explosion_position);
+                  $("#explosion").css("display", "inline");
+                  
+                  //check if the shot hit the alien
+                  if(data.end_game == "true")
+                  { 
+                    $("#alien").attr("src", "/img/dead_alien.png");
+                    $("#alien").css("left", data.alien_position - 150);
+                    $("#alien").css("top", 350);
+                    $("#explosion").css("top", 550);
+                    $("#result").text("The Alien is Dead, Ripley Wins! Reload to Play Again!");
+                    $("p.instructions").css("display", "none")
+                    $(document).unbind("keydown")
+                  }
+                  else
+                  {                          
+                    //display the alien in its new position after the turn
+                    $("#alien").css("left", data.alien_position);
+                    //makes the explosion disappears after 1 second
+                    setTimeout(function(){
+                      $("#explosion").css("display", "none");
+                    }, 1000);
+                  }
+                }
+              });
+            break;
+
+            case 38: // up
+              e.preventDefault();
+              $.ajax({
+                url: "/increase_angle",
+                type: "GET",
+                dataType: "json",
+                success: set_canon_angle
+              });
+            break;
+
+            case 40: // down
+              e.preventDefault();
+              $.ajax({
+                url: "/decrease_angle",
+                type: "GET",
+                dataType: "json",
+                success: set_canon_angle
+              });
+            break;
+
+            default: 
+              return; //other keys
+          }
+        });
+      });
+
+      set_canon_angle = function(data) {
+        $("#canon").css("webkitTransform", "rotate(" + data.weapon_angle + "deg)");
+        $("#canon").css("msTransform", "rotate(" + data.weapon_angle + "deg)");
+        $("#canon").css("MozTransform", "rotate(" + data.weapon_angle + "deg)");
+        $("#canon").css("OTransform", "rotate(" + data.weapon_angle + "deg)");
+        $("#canon").css("transform", "rotate(" + data.weapon_angle + "deg)");
+        $("#weapon-angle").text("Weapon Angle: " + Math.abs(data.weapon_angle) + "°");
+
+        $("#canon").css("webkitTransform-origin", "bottom left");
+        $("#canon").css("msTransform-origin", "bottom left");
+        $("#canon").css("MozTransform-origin", "bottom left");
+        $("#canon").css("OTransform-origin", "bottom left");
+        $("#canon").css("transform-origin", "bottom left");
+      } 
+    </script>
+    <style type="text/css">
+      body 
+      {
+        background-image: url("/img/landscape.png");
+      }
+
+      p 
+      {
+        color: white;
+        font-size: 60;
+        text-align: center;
+        position: relative;
+        font-family: Lucida Console, Lucida Sans;
+        margin: 0;
+        display: block;
+      }
+
+      p.instructions 
+      {
+        font-size: 20;
+        text-align: left;
+      }
+
+      img
+      {
+        position: absolute;
+        top:400px;
+      }
+
+      img#alien
+      {
+        top:450px; 
+        left:<%= alien_position %>px;
+      }
+
+      img#canon
+      {
+        top:480px; 
+        left:500px;
+        transform:rotate(<%= weapon_angle %>deg);
+        transform-origin: bottom left;
+        -ms-transform: rotate(<%= weapon_angle %>deg);
+        -ms-transform-origin: bottom left;
+        -webkit-transform: rotate(<%= weapon_angle %>deg);
+        -webkit-transform-origin: bottom left;
+      }
+
+      img#explosion
+      {
+        top:750px; 
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <p id="result" />
+    <p class="instructions">Use UP and DOWN arrows to control the shooting angle</p>
+    <p class="instructions">Use SPACE to shoot</p>
+    <p id="weapon-angle" class="instructions">Weapon Angle: <%= weapon_angle.to_i.abs %>°</p>
+    <img id="spaceship" src="/img/spaceship.png" />
+    <img id="alien" src="/img/alien.png" />
+    <img id="canon" src="/img/canon.png" />
+    <img id="explosion" src="/img/explosion.png" />
+  </body>
+</html>
